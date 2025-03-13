@@ -38,14 +38,14 @@ function findRock(){
 
     //init vars
     var x = 850;
-    var y = 320;
-    var width = 1650;
-    var height = 820;
+    var y = 350;
+    var width = 1550;
+    var height = 700;
     var rockColours = ["6a6363","968c8b","988d8d"];
 
     var img = robot.screen.capture(x, y, width, height);
 
-    for(var i = 0; i < 100; i++){
+    for(var i = 0; i < 250; i++){
         var random_x = getRandomInt(0, width-1);
         var random_y = getRandomInt(0, height-1);
         var screenshot = img.colorAt(random_x, random_y);
@@ -115,7 +115,7 @@ function checkFullInv(){
     var itemTextColour = "ff9040";
     var text_x = 2483;
     var text_y = 1383;
-    var slack = 10;
+    var slack = 5;
 
     robot.moveMouseSmooth(inv_x,inv_y,1);
     sleep(200);
@@ -144,11 +144,11 @@ function bank(){
     var spellbook_y = 1090;
     var home_x = 2325;
     var home_y = 1125;
-    var bank_window_x = 1905;
-    var bank_window_y = 750;
+    var bank_window_x = 1975;
+    var bank_window_y = 800;
     var deposit_x = 1320;
     var deposit_y = 1010;
-    var portal_x = 400;
+    var portal_x = 280;
     var portal_y = 620;
     var mining_icon_x = 1095;
     var mining_icon_y = 640;  
@@ -161,9 +161,11 @@ function bank(){
     robot.mouseClick();
 
     robot.moveMouseSmooth(home_x, home_y, 1);
+    sleep(500);
     robot.mouseClick();
 
     robot.moveMouseSmooth(compass_x, compass_y, 1);
+    sleep(500);
     robot.mouseClick();
 
     sleep(3000);
@@ -178,24 +180,29 @@ function bank(){
 
     sleep(500);
 
-    robot.keyTap("esc");
-
+    robot.keyTap('escape');
+    robot.keyTap('f1');
     robot.moveMouseSmooth(portal_x, portal_y, 1);
+    sleep(300);
     robot.mouseClick();
 
-    sleep(15000);
+    sleep(10000);
 
     robot.moveMouseSmooth(mining_icon_x, mining_icon_y, 1);
     robot.mouseClick();
+
+    sleep(1000);
     
     robot.moveMouseSmooth(VWM_x, VWM_y, 1);
+    sleep(1000);
     robot.mouseClick();
 
     robot.moveMouseSmooth(tele_x, tele_y, 1);
+    sleep(1500);
     robot.mouseClick();
 
 
-    sleep(10000);
+    sleep(2000);
 
 }
 
