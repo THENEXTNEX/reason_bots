@@ -115,7 +115,7 @@ function checkFullInv(){
     var itemTextColour = "ff9040";
     var text_x = 2483;
     var text_y = 1383;
-    var slack = 5;
+    var slack = 10;
 
     robot.moveMouseSmooth(inv_x,inv_y,1);
     sleep(200);
@@ -148,6 +148,14 @@ function bank(){
     var bank_window_y = 750;
     var deposit_x = 1320;
     var deposit_y = 1010;
+    var portal_x = 400;
+    var portal_y = 620;
+    var mining_icon_x = 1095;
+    var mining_icon_y = 640;  
+    var VWM_x = 950;
+    var VWM_y = 638;
+    var tele_x = 1290;
+    var tele_y = 740;  
 
     robot.moveMouseSmooth(spellbook_x, spellbook_y, 1);
     robot.mouseClick();
@@ -160,12 +168,33 @@ function bank(){
 
     sleep(3000);
     robot.moveMouseSmooth(bank_window_x, bank_window_y, 1);
+    sleep(500);
     robot.mouseClick();
 
     sleep(6000);
 
     robot.moveMouseSmooth(deposit_x, deposit_y, 1);
     robot.mouseClick();
+
+    sleep(500);
+
+    robot.keyTap("esc");
+
+    robot.moveMouseSmooth(portal_x, portal_y, 1);
+    robot.mouseClick();
+
+    sleep(15000);
+
+    robot.moveMouseSmooth(mining_icon_x, mining_icon_y, 1);
+    robot.mouseClick();
+    
+    robot.moveMouseSmooth(VWM_x, VWM_y, 1);
+    robot.mouseClick();
+
+    robot.moveMouseSmooth(tele_x, tele_y, 1);
+    robot.mouseClick();
+
+
     sleep(10000);
 
 }
