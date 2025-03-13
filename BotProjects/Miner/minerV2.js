@@ -144,11 +144,11 @@ function bank(){
     var spellbook_y = 1090;
     var home_x = 2325;
     var home_y = 1125;
-    var bank_window_x = 1975;
+    var bank_window_x = 2150;
     var bank_window_y = 800;
     var deposit_x = 1320;
     var deposit_y = 1010;
-    var portal_x = 280;
+    var portal_x = 150;
     var portal_y = 620;
     var mining_icon_x = 1095;
     var mining_icon_y = 640;  
