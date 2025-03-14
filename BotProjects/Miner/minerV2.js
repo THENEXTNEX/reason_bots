@@ -1,10 +1,14 @@
 //import library
 
 var robot = require('robotjs');
+var half_second = 500;
+var one_second = 1000;  
+var default_speed = 1;
 
 function main(){
     console.log("Starting...");
-    sleep(4000);
+    //Give time to swap to client
+    sleep(one_second * 4);
 
     while(true){
 
@@ -13,23 +17,26 @@ function main(){
             bank();
         }
 
+        //Find the rock
         var rock = findRock();
 
+        //If the rock is not found, rotate to give more options
         if(rock == false){
             rotateCamera();
             continue;
         }
 
-        robot.moveMouseSmooth(rock.x, rock.y, 1);
-        robot.mouseClick();
+        //Move to given positions to mine ore
+        moveAndClick(rock.x, rock.y, default_speed);
 
-        sleep(5000);
+        sleep(one_second * 5);
 
         
     }
     
 }
 
+//No sleep function in built to js
 function sleep(ms){
     Atomics.wait(new Int32Array(new SharedArrayBuffer(4)),0 ,0, ms);
 }
@@ -43,8 +50,11 @@ function findRock(){
     var height = 700;
     var rockColours = ["6a6363","968c8b","988d8d"];
 
+    //Take a screenshot of a smaller area to compute faster
     var img = robot.screen.capture(x, y, width, height);
 
+    //Takes random x and y pixels within the screenshot taken so there is no bias to ores in the top left of the screenshot.
+    //Pixel matches the colours to see if it matches the array, if so, return the x and y pos, else false positive.
     for(var i = 0; i < 250; i++){
         var random_x = getRandomInt(0, width-1);
         var random_y = getRandomInt(0, height-1);
@@ -82,34 +92,31 @@ function confirmRock(screen_x, screen_y){
     //Move the mouse to the given coords
     robot.moveMouseSmooth(screen_x,screen_y, 1);
     //Wait
-    sleep(300);
+    sleep(one_second/10);
     //Check colour of action text
     var check_x = screen_x + 60;
     var check_y = screen_y + 30;
-    var flag = 0;
+    var slack = 5;
 
-    for(var i = check_x; i < check_x + 5; i++){
-        for(var j = check_y; j < check_y + 5; j++){
+    //Checks the text box to check for Cyan colour as this indicates an action
+    for(var i = check_x; i < check_x + slack; i++){
+        for(var j = check_y; j < check_y + slack; j++){
             
             var pc = robot.getPixelColor(i, j);
 
             console.log("Pixel colour @ x: " + i + "y: " + j + ": " + pc);
             if(actionTextColour.includes(pc)){
-                flag = 1;
+                return true;
             }
         }
     }
 
-    if(flag == 1){
-        return true
-    }else{
-        return false;
-    }
+    return false;
 }
 
 function checkFullInv(){
 
-    var flag = 0;
+    //Init variables
     var inv_x = 2465;
     var inv_y = 1350;
     var itemTextColour = "ff9040";
@@ -117,93 +124,102 @@ function checkFullInv(){
     var text_y = 1383;
     var slack = 5;
 
+    //Move mouse to hover last invy slot, if and item is there, the orange game text will show slightly below item
     robot.moveMouseSmooth(inv_x,inv_y,1);
-    sleep(200);
+    sleep(one_second/10);
 
+    //Check pixels around the area in which the game text colour should appear
+    //Return true (Flag == 1) if the colour is found
     for(var i = text_x - slack; i < text_x + slack; i++){
         for(var j = text_y - slack; j < text_y + slack; j++){
             
             var pc = robot.getPixelColor(i,j);
             console.log("Pixel colour @ x: " + i + "y: " + j + ": " + pc);
             if(itemTextColour.includes(pc)){
-                flag = 1;
-                return flag;
+                return true;
             }
         }
     }
     
-    return flag;
+    return false;
 
 }
 
 function bank(){
 
+    //All x y positions required to bank
     var compass_x = 2365;
     var compass_y = 50;
+
     var spellbook_x = 2500;
     var spellbook_y = 1090;
+
     var home_x = 2325;
     var home_y = 1125;
-    var bank_window_x = 2150;
-    var bank_window_y = 800;
+
+    var bank_window_x = 1925;
+    var bank_window_y = 760;
+
     var deposit_x = 1320;
     var deposit_y = 1010;
-    var portal_x = 150;
-    var portal_y = 620;
+
+    var portal_x = 420;
+    var portal_y = 650;
+
     var mining_icon_x = 1095;
-    var mining_icon_y = 640;  
+    var mining_icon_y = 640; 
+
     var VWM_x = 950;
     var VWM_y = 638;
+
     var tele_x = 1290;
-    var tele_y = 740;  
+    var tele_y = 740;
 
-    robot.moveMouseSmooth(spellbook_x, spellbook_y, 1);
-    robot.mouseClick();
+    //Open spellbook
+    moveAndClick(spellbook_x, spellbook_y, default_speed, one_second);
 
-    robot.moveMouseSmooth(home_x, home_y, 1);
-    sleep(500);
-    robot.mouseClick();
+    //Teleport home
+    moveAndClick(home_x, home_y, default_speed, one_second);
 
-    robot.moveMouseSmooth(compass_x, compass_y, 1);
-    sleep(500);
-    robot.mouseClick();
+    //Click compass to face north
+    moveAndClick(compass_x, compass_y, default_speed, one_second);
 
-    sleep(3000);
-    robot.moveMouseSmooth(bank_window_x, bank_window_y, 1);
-    sleep(500);
-    robot.mouseClick();
+    sleep(one_second * 3);
 
-    sleep(6000);
+    //Click bank window
+    moveAndClick(bank_window_x, bank_window_y, default_speed, one_second);
 
-    robot.moveMouseSmooth(deposit_x, deposit_y, 1);
-    robot.mouseClick();
+    sleep(one_second * 6);
 
-    sleep(500);
+    //Deposit all
+    moveAndClick(deposit_x, deposit_y, default_speed, one_second);
 
+    //Close bank, swap to inventory and click on portal nexus
     robot.keyTap('escape');
     robot.keyTap('f1');
-    robot.moveMouseSmooth(portal_x, portal_y, 1);
-    sleep(300);
-    robot.mouseClick();
+    moveAndClick(portal_x, portal_y, default_speed, one_second);
 
-    sleep(10000);
-
-    robot.moveMouseSmooth(mining_icon_x, mining_icon_y, 1);
-    robot.mouseClick();
-
-    sleep(1000);
+    sleep(one_second * 8); 
     
-    robot.moveMouseSmooth(VWM_x, VWM_y, 1);
-    sleep(1000);
+    //Click mining icon
+    moveAndClick(mining_icon_x, mining_icon_y, default_speed, one_second);
+    
+    //Select Varrock West Mine (VWM)
+    moveAndClick(VWM_x, VWM_y, default_speed, one_second);
+
+    //Click teleport button
+    moveAndClick(tele_x, tele_y, default_speed, one_second+half_second);
+
+    sleep(one_second);
+
+}
+
+//Function to process the moving and clicking of mouse 
+function moveAndClick(x,y,speed, ms){
+
+    robot.moveMouseSmooth(x,y,speed);
+    sleep(ms);
     robot.mouseClick();
-
-    robot.moveMouseSmooth(tele_x, tele_y, 1);
-    sleep(1500);
-    robot.mouseClick();
-
-
-    sleep(2000);
-
 }
 
 function testScreen(){
