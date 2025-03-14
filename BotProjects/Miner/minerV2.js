@@ -5,13 +5,28 @@ var half_second = 500;
 var one_second = 1000;  
 var default_speed = 1;
 
+    //All x y positions required to bank
+    var compass_x = 2365;
+    var compass_y = 50;
+
+    var spellbook_x = 2500;
+    var spellbook_y = 1090;
+
+    var home_x = 2325;
+    var home_y = 1125;
+
+//960 680
 function main(){
     console.log("Starting...");
     //Give time to swap to client
     sleep(one_second * 4);
 
+    //Init bot so it can be started anywhere in game
+    initialise();
+
     while(true){
 
+        
         //Check if invy full
         if(checkFullInv()){
             bank();
@@ -27,7 +42,10 @@ function main(){
         }
 
         //Move to given positions to mine ore
-        moveAndClick(rock.x, rock.y, default_speed);
+        console.log("Reached before click");
+        console.log("Rock.x = " + rock.x + " Rock.y = " + rock.y);
+        moveAndClick(rock.x, rock.y, default_speed, half_second);
+        console.log("Should have clicked");
 
         sleep(one_second * 5);
 
@@ -145,35 +163,7 @@ function checkFullInv(){
 
 }
 
-function bank(){
-
-    //All x y positions required to bank
-    var compass_x = 2365;
-    var compass_y = 50;
-
-    var spellbook_x = 2500;
-    var spellbook_y = 1090;
-
-    var home_x = 2325;
-    var home_y = 1125;
-
-    var bank_window_x = 1925;
-    var bank_window_y = 760;
-
-    var deposit_x = 1320;
-    var deposit_y = 1010;
-
-    var portal_x = 420;
-    var portal_y = 650;
-
-    var mining_icon_x = 1095;
-    var mining_icon_y = 640; 
-
-    var VWM_x = 950;
-    var VWM_y = 638;
-
-    var tele_x = 1290;
-    var tele_y = 740;
+function teleHome(){
 
     //Open spellbook
     moveAndClick(spellbook_x, spellbook_y, default_speed, one_second);
@@ -185,6 +175,32 @@ function bank(){
     moveAndClick(compass_x, compass_y, default_speed, one_second);
 
     sleep(one_second * 3);
+}
+
+function initialise(){
+
+    var portal_init_x = 960;
+    var portal_init_y = 680;
+
+    teleHome();
+    robot.keyTap('f1');
+
+    portalNexus(portal_init_x, portal_init_y);
+    
+}
+
+function bank(){
+
+    var bank_window_x = 1925;
+    var bank_window_y = 760;
+
+    var deposit_x = 1320;
+    var deposit_y = 1010;
+
+    var portal_bank_x = 420;
+    var portal_bank_y = 650;
+
+    teleHome();
 
     //Click bank window
     moveAndClick(bank_window_x, bank_window_y, default_speed, one_second);
@@ -197,7 +213,24 @@ function bank(){
     //Close bank, swap to inventory and click on portal nexus
     robot.keyTap('escape');
     robot.keyTap('f1');
-    moveAndClick(portal_x, portal_y, default_speed, one_second);
+
+    portalNexus(portal_bank_x, portal_bank_y);
+    
+}
+
+function portalNexus(x ,y){
+    
+    //Relevant variables
+    var mining_icon_x = 1095;
+    var mining_icon_y = 640; 
+
+    var VWM_x = 950;
+    var VWM_y = 638;
+
+    var tele_x = 1290;
+    var tele_y = 740;
+
+    moveAndClick(x, y, default_speed, one_second);
 
     sleep(one_second * 8); 
     
@@ -211,12 +244,12 @@ function bank(){
     moveAndClick(tele_x, tele_y, default_speed, one_second+half_second);
 
     sleep(one_second);
-
 }
 
 //Function to process the moving and clicking of mouse 
 function moveAndClick(x,y,speed, ms){
 
+    console.log("x = " + x + " y = " + y + " speed = " + speed + " ms = " + ms);
     robot.moveMouseSmooth(x,y,speed);
     sleep(ms);
     robot.mouseClick();
