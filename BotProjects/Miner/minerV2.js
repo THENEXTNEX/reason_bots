@@ -5,17 +5,16 @@ var half_second = 500;
 var one_second = 1000;  
 var default_speed = 1;
 
-    //All x y positions required to bank
-    var compass_x = 2365;
-    var compass_y = 50;
+//All x y positions required to bank
+var compass_x = 2365;
+var compass_y = 50;
 
-    var spellbook_x = 2500;
-    var spellbook_y = 1090;
+var spellbook_x = 2500;
+var spellbook_y = 1090;
 
-    var home_x = 2325;
-    var home_y = 1125;
+var home_x = 2325;
+var home_y = 1125;
 
-//960 680
 function main(){
     console.log("Starting...");
     //Give time to swap to client
@@ -208,7 +207,7 @@ function bank(){
     sleep(one_second * 6);
 
     //Deposit all
-    moveAndClick(deposit_x, deposit_y, default_speed, one_second);
+    moveAndClick(deposit_x, deposit_y, default_speed, one_second+half_second);
 
     //Close bank, swap to inventory and click on portal nexus
     robot.keyTap('escape');
